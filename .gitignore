@@ -1,0 +1,7 @@
+#Secrets
+*.tfvars*
+
+# Compiled files
+*.tfstate*
+
+.terraform
