@@ -1,67 +1,33 @@
-data "aws_ami" "eks-worker" {
-  filter {
-    name   = "name"
-    values = ["amazon-eks-node-${aws_eks_cluster.ccdb.version}-v*"]
+resource "aws_eks_node_group" "ccdb-node-group" {
+  cluster_name    = aws_eks_cluster.ccdb.name
+  node_group_name = "ccdb-ck-test"
+  node_role_arn   = aws_iam_role.ccdb-node.arn
+  #subnet_ids      = aws_subnet.example[*].id
+  subnet_ids      = module.vpc.public_subnets
+
+  scaling_config {
+    desired_size = 1
+    max_size     = 1
+    min_size     = 1
   }
 
-  most_recent = true
-  owners      = ["602401143452"] # Amazon
-}
-
-# EKS currently documents this required userdata for EKS worker nodes to
-# properly configure Kubernetes applications on the EC2 instance.
-# We utilize a Terraform local here to simplify Base64 encoding this
-# information into the AutoScaling Launch Configuration.
-# More information: https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html
-locals {
-  ccdb-node-userdata = <<USERDATA
-#!/bin/bash
-set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.ccdb.endpoint}' --b64-cluster-ca '${aws_eks_cluster.ccdb.certificate_authority[0].data}' '${var.cluster-name}'
-USERDATA
-
-}
-
-resource "aws_launch_configuration" "ccdb" {
-  associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ccdb-node.name
-  image_id = data.aws_ami.eks-worker.id
-  instance_type = "t2.xlarge"
-  name_prefix = "terraform-eks-ccdb"
-  security_groups = [aws_security_group.ccdb-node.id]
-  user_data_base64 = base64encode(local.ccdb-node-userdata)
+  #associate_public_ip_address = true
+  # iam_instance_profile = aws_iam_instance_profile.ccdb-node.name
+  #image_id = data.aws_ami.eks-worker.id
+  instance_types = ["t2.xlarge"]
+  #name_prefix = "terraform-eks-ccdb"
+  #security_groups = [aws_security_group.ccdb-node.id]
+  #user_data_base64 = base64encode(local.ccdb-node-userdata)
 
   lifecycle {
     create_before_destroy = true
   }
+
+  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
+  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
+  depends_on = [
+    aws_iam_role_policy_attachment.ccdb-node-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.ccdb-node-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.ccdb-node-AmazonEC2ContainerRegistryReadOnly,
+  ]
 }
-
-resource "aws_autoscaling_group" "ccdb" {
-  desired_capacity = 3
-  launch_configuration = aws_launch_configuration.ccdb.id
-  max_size = 4
-  min_size = 1
-  name = "terraform-eks-ccdb"
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  vpc_zone_identifier = module.vpc.public_subnets
-
-  tag {
-    key = "Name"
-    value = "terraform-eks-ccdb"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "kubernetes.io/cluster/${var.cluster-name}"
-    value = "owned"
-    propagate_at_launch = true
-  }
-}
-
