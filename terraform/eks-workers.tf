@@ -1,13 +1,13 @@
 resource "aws_eks_node_group" "ccdb-node-group" {
   cluster_name    = aws_eks_cluster.ccdb.name
-  node_group_name = "ccdb-ck-test"
+  node_group_name = "ccdb-node-group"
   node_role_arn   = aws_iam_role.ccdb-node.arn
   #subnet_ids      = aws_subnet.example[*].id
   subnet_ids      = module.vpc.public_subnets
 
   scaling_config {
-    desired_size = 1
-    max_size     = 1
+    desired_size = 3
+    max_size     = 4
     min_size     = 1
   }
 
