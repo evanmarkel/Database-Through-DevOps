@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gremlin-conf
+  namespace: gremlin
+type: Opaque
+stringData:
+  GREMLIN_TEAM_ID: d099bcc2-ec66-517b-8c02-a165c030632f
+  GREMLIN_CLUSTER_ID: terraform-eks-ccdb
