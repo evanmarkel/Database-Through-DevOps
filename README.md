@@ -13,8 +13,9 @@ Choices of database architecture have historically relied on a narrow trade-off 
 
 ### Install Terraform and Spin Up Your Infrastructure on AWS
 Download and run terraform binary [here](https://www.terraform.io/downloads.html). 
-`terraform init`
-`terraform apply`
+Then run
+$`terraform init`
+$`terraform apply`
 
 ### Configure kubectl
 `terraform output kubeconfig >> ~/.kube/config`
