@@ -6,7 +6,7 @@ Choices of database architecture have historically relied on a narrow trade-off 
 
 ## Infrastructure 
 
- ![Project Infrastructure](/Users/evanmarkel/Desktop/infrastructure.png)
+ ![Project Infrastructure](/images/infrastructure.png)
 
 ## Instructions
 
