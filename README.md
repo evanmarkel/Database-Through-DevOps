@@ -4,6 +4,10 @@ PostgreSQL migration to NewSQL containerized and multi-cluster CockroachDB State
 ## Motivation
 Choices of database architecture have historically relied on a narrow trade-off between availability and consistency. This project demonstrates the ability of new technologies to go beyond the exclusivity of the CAP theorem and showcase a range of benefits.  This project migrated from a large single node PostgreSQL database to CockroachDB deployed with Kubernetes on AWS with an autoscaled, stateful, and multi-clustered orchestration. The resulting database infrastructure shows benchmark improvements, high data availability, geographical & horizontal scalability, and the preservation of ACID dependent financial transactions. 
 
+## Infrastructure 
+
+ ![Project Infrastructure](/Users/evanmarkel/Desktop/infrastructure.png)
+
 ## Instructions
 
 ### Install kubectl for command line k8s
