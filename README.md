@@ -21,8 +21,8 @@ sudo mv kubectl /usr/local/bin
 Download and run terraform binary [here](https://www.terraform.io/downloads.html). 
 Then run
 
-$`terraform init`
-$`terraform apply`
+$ `terraform init`
+$ `terraform apply`
 
 ### Configure kubectl
 ```
