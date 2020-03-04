@@ -2,7 +2,7 @@ resource "aws_vpc" "us-east-1-terraform-eks-ccdb" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_vpc" "bar" {
+resource "aws_vpc" "us-west-1-terraform-eks-ccdb" {
   cidr_block = "10.1.0.0/16"
 }
 
