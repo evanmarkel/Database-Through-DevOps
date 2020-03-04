@@ -31,4 +31,4 @@ aws eks --region us-east-1 update-kubeconfig --name terraform-eks-ccdb
 ```
 
 ## Next Steps: 
-Install CockroachDB, Prometheus, K8s dashboard, and Gremlin for resilience testing as per developer documentation. 
+Install CockroachDB, Prometheus, K8s dashboard, and Gremlin for resilience testing as per documentation in individual folders. 

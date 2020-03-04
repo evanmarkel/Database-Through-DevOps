@@ -1,11 +1,10 @@
 # CockroachDB Configuration files
 
 ### Configure Stateful Set from config files
-$ `kubectl create -f cockroachdb-statefulset.yaml`
+$ `kubectl create -f cockroach/cockroachdb-statefulset.yaml`
 
 ### Initialize cockroach cluster 
-$ `kubectl create cluster-init.yaml`
-
+$ `kubectl create cockroach/cluster-init.yaml`
 
 ## Run Cockroach SQL client and migrate Postgres pg_dump
 
